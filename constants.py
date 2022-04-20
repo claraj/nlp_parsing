@@ -1,0 +1,10 @@
+PRONOUN = 'PRONOUN'
+NP = 'NP'
+VP = 'VP'
+NUM = 'NUM'
+
+VERB 
+ROOT
+NOUN 
+TENSE
+TYPE

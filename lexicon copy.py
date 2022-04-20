@@ -13,31 +13,51 @@ lexicon = {
         'type': 'name',
     },
 
-
+    # todo is more info needed?
     'purple': {
         'type': 'adj'
     },
 
-#     # todo "did" - is lexicon correct? 
-#  probably won't use here...?
+    # todo "did" - is lexicon correct? 
 
     'did': { 
         'type': 'verb',
-        'features': {
-            'VERB': {'do'},
-            'TYPE': {'transitive', 'bitransitive'},
-            'TENSE': {'past'},
-            'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'} 
-        },
+        'features': [ 
+            {
+                'feature': 'VERB',
+                'values': {'do'}
+            },
+            {
+                'feature': 'TYPE',
+                'values': {'transitive', 'bitransitive'}
+            },
+            {
+                'feature': 'TENSE',
+                'values': {'past'}
+            },
+            {
+                'feature': 'NUM',
+                'values': {'1s', '1p', '2s', '2p', '3s', '3p'}
+            },
+        ] 
     },
     
     'walks': { 
         'type': 'verb',
-        'features': {
-            'VERB': {'walk'},
-            'TENSE': {'present'},
-            'NUM': {'3s'}
-        }
+        'features': [ 
+            {
+                'feature': 'VERB',
+                'values': {'walk'}
+            },
+            {
+                'feature': 'TENSE',
+                'values': {'present'}
+            },
+            {
+                'feature': 'NUM',
+                'values': {'3s'}
+            },
+        ] 
     },
 
     'walked': { 
@@ -114,56 +134,78 @@ lexicon = {
 
     'a': { 
         'type': 'article',
-        'features': {
-            'NUM': {'3s'}
-        }
+        'features': [ 
+            {
+                'feature': 'NUM',
+                'values': {'3s'}
+            }
+        ] 
     },
 
     'the': { 
         'type': 'article',
-        'features': {
-                 'NUM': {'3s', '3p'}
+        'features': [ 
+            {
+                'feature': 'NUM',
+                'values': {'3s', '3p'}
             }
-        
+        ] 
     },
 
     'her': { 
         'type': 'article',
-        'features': 
+        'features': [ 
             {
-                 'ROOT': {'she'},
-                 'NUM': {'3s', '3p'}
+                'feature': 'ROOT',
+                'values': {'she'}
             },
+            {
+                'feature': 'NUM',
+                'values': {'3s', '3p'}
+            },
+        ] 
     },
 
     'picture': { 
         'type': 'noun',
-        'features': 
+        'features': [ 
             {
-                 'NOUN' : {'picture'},
-                 'NUM':  {'3s'}
+                'feature': 'NOUN',
+                'values': {'picture'}
             },
-        
+            {
+                'feature': 'NUM',
+                'values': {'3s'}
+            },
+        ] 
     },
 
     'man': { 
         'type': 'noun',
-        'features': 
+        'features': [ 
             {
-                 'NOUN' : {'main'},
-                 'NUM':  {'3s'}
+                'feature': 'NOUN',
+                'values': {'man'}
             },
-        
+            {
+                'feature': 'NUM',
+                'values': {'3s',}
+            },
+        ] 
     },
     
     'dreams': { 
         'type': 'noun',
-        'features': 
+        'features': [ 
             {
-                 'NOUN' : {'dream'},
-                 'NUM':  {'3p'}
+                'feature': 'NOUN',
+                'values': {'dream'}
             },
-        
+            {
+                'feature': 'NUM',
+                'values': {'3p',}
+            },
+        ] 
     },
 
     'boat': { 
@@ -182,8 +224,9 @@ lexicon = {
 
     'of': { 
         'type': 'preposition',
-        'features': {
-        }
+        'features': [ 
+
+        ] 
     },
 
     

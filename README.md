@@ -1,0 +1,1 @@
+Requires Python 10 to use fancy new match case
