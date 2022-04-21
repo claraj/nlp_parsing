@@ -107,7 +107,7 @@ def ATN(words):
         indirect_object_noun_parse, position, NUM = NP_1(words, position)
         
         parse.pop()  # remove the object? 
-        object_stuff_again = ( ('IND-OBJ', indirect_object_noun_parse) , ( 'OBJ', object_noun_parse) ) 
+        object_stuff_again = ( ( 'OBJ', object_noun_parse) , ('IND-OBJ', indirect_object_noun_parse) ) 
         parse.append(object_stuff_again)   # don't want to re-add the object? 
 
     else:
@@ -142,7 +142,7 @@ def NP_1(words, position=0):
                 article = [ ('DET', word), ('NUM', lexicon_entry['features']['NUM'])]
                 # todo article -> adjective loop 
                 out.append(article)
-                from_np_2, position = NP_2(words, NUM, position + 1)
+                from_np_2, position = NP_2(words, NUM, position + 1, adj=[])
                 out.append(from_np_2)
             case 'pronoun':
                 pronoun = [ ('PRONOUN', word), ('NUM', lexicon_entry['features']['NUM'] ) ]
@@ -169,6 +169,8 @@ def NP_1(words, position=0):
 # outputs something like ( (NOUN, cat) ( ADJS, { big, purple } ) )
 def NP_2(words, NUM, position, adj = []):
 
+    print("GO NP2", adj)
+
     word = words[position]
 
     lexicon_entry = lexicon[word]
@@ -176,18 +178,14 @@ def NP_2(words, NUM, position, adj = []):
     match lexicon_entry['type']:
         case 'adj':
             adj.append(word)
-            # return adj, position + 1, NP_2(words, NUM, position + 1, adj)
             return NP_2(words, NUM, position + 1, adj)
             
         case 'noun':
             # NUM(*)  must be in the set NUM
             num_intersect = sets_intersect(lexicon_entry['features']['NUM'], NUM)
-            # if lexicon_entry['features']['NUM'] == NUM or lexicon_entry['features']['NUM'] in NUM:
             if num_intersect:
                 parse = ( ('NOUN', word ),  ('NUM', num_intersect ),  ( 'ADJ', adj) )
                 return parse, position
-                # NUM = NUM(*) ⋂ NUM
-                # return 
             else:
                 raise Exception(f'Noun should match number {NUM}. {word} {lexicon_entry} \n{words}')
 
