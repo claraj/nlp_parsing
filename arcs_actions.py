@@ -114,7 +114,7 @@ def ATN(words):
         # jump, done 
         pass 
 
-    return parse
+    return tuple(parse)
 
 
 # the big noun phrase ATN. Deals with "we read", "the cat", "the big blue cat", "Zoe" etc. 
@@ -139,37 +139,35 @@ def NP_1(words, position=0):
 
         match lexicon_entry['type']:
             case 'article':
-                article = [ ('DET', word), ('NUM', lexicon_entry['features']['NUM'])]
+                article = ( ('DET', word), ('NUM', lexicon_entry['features']['NUM']))
                 # todo article -> adjective loop 
                 out.append(article)
                 from_np_2, position = NP_2(words, NUM, position + 1, adj=[])
                 out.append(from_np_2)
             case 'pronoun':
-                pronoun = [ ('PRONOUN', word), ('NUM', lexicon_entry['features']['NUM'] ) ]
+                pronoun = ( ('PRONOUN', word), ('NUM', lexicon_entry['features']['NUM'] ) )
                 out.append(pronoun)
             case 'noun':
                 if NUM == {'3s'}:
-                    noun = [ ('NOUN', word), ('NUM', '3s' ) ]
+                    noun = ( ('NOUN', word), ('NUM', '3s' ) )
                     out.append(noun)
                 elif NUM == {'3p'}:
-                    noun = [ ('NOUN', word), ('NUM', '3p' ) ]
+                    noun = ( ('NOUN', word), ('NUM', '3p' ) )
                     out.append(noun)
                 else:
                     raise Exception(f'Noun does not make sense. {word} {lexicon_entry} \n{words}')
             case 'name':
-                name = [ ('NAME', word), ('NUM', '3s') ]
+                name = ( ('NAME', word), ('NUM', '3s') )
                 out.append(name)
             case _:   # the default case, nothing else matches
                 raise Exception(f'Unexpected word type {word} {lexicon_entry} \n{words}')
 
-        return out, position + 1, NUM
+        return tuple(out), position + 1, NUM
 
 
 # Handles adjectives, "big" and "purple" in "the big purple cat"
 # outputs something like ( (NOUN, cat) ( ADJS, { big, purple } ) )
 def NP_2(words, NUM, position, adj = []):
-
-    print("GO NP2", adj)
 
     word = words[position]
 
@@ -178,7 +176,7 @@ def NP_2(words, NUM, position, adj = []):
     match lexicon_entry['type']:
         case 'adj':
             adj.append(word)
-            return NP_2(words, NUM, position + 1, adj)
+            return tuple(NP_2(words, NUM, position + 1, adj))
             
         case 'noun':
             # NUM(*)  must be in the set NUM
@@ -205,7 +203,7 @@ example = 'Mary walks'.split()  # ok
 # example = 'a large purple man sailed the small green boat to Mary'.split()     # TODO no code to handle prepositions, "to" is a preposition in this sentence
 example = 'Mary gave me a picture'.split()  # NP V NP NP
 example = 'Mary gave Zoe a purple picture'.split()  # NP V NP NP
-example = 'Mary gave the green boat a purple picture'.split()  # NP V NP NP   
+example = 'Mary gave the large green boat a small purple picture'.split()  # NP V NP NP   
 
 pprint.pprint(ATN(example))
 
