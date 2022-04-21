@@ -1,16 +1,33 @@
 lexicon = {
+
+
+    'to': { 
+        'type': 'preposition',
+        'features': {
+                # ??? TODO
+            }
+    },
+
     'what': { 
         'type': 'wh-pronoun',
         'features': {
-                'feature': 'NUM',
-                'values': {'3s', '3p'}
+                'NUM': {'3s', '3p'}
             }
     },
 
    'Mary': { 
         'type': 'name',
+            'features': {
+                'NUM': {'3s'}
+            }
     },
 
+   'Zoe': { 
+        'type': 'name',
+            'features': {
+                'NUM': {'3s'}
+            }
+    },
 
     'purple': {
         'type': 'adj'
@@ -84,7 +101,7 @@ lexicon = {
             'VERB': {'give'},
             'TYPE': {'transitive', 'bitransitive'},
             'TENSE': {'infinitive', 'present'},
-            'NUM': {'1s', '1p', '2s', '2p', '3p'}
+            'NUM': {'1s', '1p', '2s', '2p', '3p'}  # no 3s
         },
     },
 
@@ -94,16 +111,15 @@ lexicon = {
             'VERB': {'give'},
             'TYPE': {'transitive', 'bitransitive'},
             'TENSE': {'past'},
-            'NUM': {'1s', '1p', '2s', '2p', '3p'}
+            'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'}
         },
     },
 
     'me': { 
         'type': 'pronoun',
         'features': {
-                'feature': 'NUM',
-                'values': {'1s'}
-            }
+            'NUM': {'1s'}
+        }
     },
 
     'a': { 
@@ -116,15 +132,14 @@ lexicon = {
     'the': { 
         'type': 'article',
         'features': {
-                 'NUM': {'3s', '3p'}
-            }
+            'NUM': {'3s', '3p'}
+        }
         
     },
 
     'her': { 
         'type': 'pronoun',
-        'features': 
-            {
+        'features': {
                  'ROOT': {'she'},
                  'NUM': {'3s', '3p'}
             },
@@ -132,8 +147,7 @@ lexicon = {
 
     'picture': { 
         'type': 'noun',
-        'features': 
-            {
+        'features': {
                  'NOUN' : {'picture'},
                  'NUM':  {'3s'}
             },
@@ -142,8 +156,7 @@ lexicon = {
 
     'pictures': { 
         'type': 'noun',
-        'features': 
-            {
+        'features': {
                  'NOUN' : {'picture'},
                  'NUM':  {'3p'}
             },
@@ -152,8 +165,7 @@ lexicon = {
 
     'man': { 
         'type': 'noun',
-        'features': 
-            {
+        'features': {
                  'NOUN' : {'main'},
                  'NUM':  {'3s'}
             },
@@ -162,8 +174,7 @@ lexicon = {
     
     'dreams': { 
         'type': 'noun',
-        'features': 
-            {
+        'features': {
                  'NOUN' : {'dream'},
                  'NUM':  {'3p'}
             },

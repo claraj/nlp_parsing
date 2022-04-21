@@ -26,9 +26,9 @@ NP / pronoun     PRONOUN = *
 
 """
 
-NP - verb    <- we read ; the dog
-np - verb - np  <- we read to the dog ; the dog ate flour
-np - verb - np  <- we read a book to the dog ; the dog ate a bag of flour
+NP - verb    <- we read ; the dog ; Zoe
+np - verb - np  <- we read to the dog ; the dog ate flour ; Zoe gave a boat
+np - verb - np - np <- we read a book to the dog ; the dog ate a bag of flour ; Zoe gave Mary a purple boat 
 
 """
 
@@ -50,7 +50,7 @@ def ATN(words):
 
     for word in words:
         if not lexicon.get(word):
-            raise Exception('Word {word} not in lexicon.')
+            raise Exception(f'Word {word} not in lexicon.')
 
     noun_parse, position, NUM_NP = NP_1(words, 0)
 
@@ -134,41 +134,31 @@ def NP_1(words, position=0):
         if features:
             NUM = features.get('NUM')
         else:
-            NUM = {}
+            NUM = set()
 
 
         match lexicon_entry['type']:
-            # case 'adj':
-            #     from_np_2, position = NP_2(words, word, NUM)
-            #     out.append(from_np_2)
-            #     return out, index + position + 1
             case 'article':
                 article = [ ('DET', word), ('NUM', lexicon_entry['features']['NUM'])]
                 # todo article -> adjective loop 
                 out.append(article)
                 from_np_2, position = NP_2(words, NUM, position + 1)
                 out.append(from_np_2)
-                # return out, index + position + 1, NUM
             case 'pronoun':
                 pronoun = [ ('PRONOUN', word), ('NUM', lexicon_entry['features']['NUM'] ) ]
                 out.append(pronoun)
-                # return out, index + position + 1, NUM
             case 'noun':
-                # TEST NUM(*) = 3p
                 if NUM == {'3s'}:
                     noun = [ ('NOUN', word), ('NUM', '3s' ) ]
                     out.append(noun)
-                    # return out,  index + position + 1
                 elif NUM == {'3p'}:
                     noun = [ ('NOUN', word), ('NUM', '3p' ) ]
                     out.append(noun)
-                    # return out,  index + position + 1, NUM
                 else:
                     raise Exception(f'Noun does not make sense. {word} {lexicon_entry} \n{words}')
             case 'name':
                 name = [ ('NAME', word), ('NUM', '3s') ]
                 out.append(name)
-                # return out, index + position + 1, NUM
             case _:   # the default case, nothing else matches
                 raise Exception(f'Unexpected word type {word} {lexicon_entry} \n{words}')
 
@@ -208,14 +198,16 @@ def NP_2(words, NUM, position, adj = []):
 
 # example = 'a picture'.split()   # yup
 example = 'a purple purple picture'.split()   # yup
-# example = 'Mary'.split()  # ok
+example = 'Mary walks'.split()  # ok
 # example = 'boat'.split()  # ok
 # example = 'pictures'.split()  #ok
 
-example = 'a purple picture walked'.split()  # yup
-example = 'a large purple man sailed the small green boat'.split()  # adjectives are borked
-example = 'a large purple man sailed the small green boat to Mary'.split()  # adjectives are borked
-
+# example = 'a purple picture walked'.split()  # yup
+# example = 'a large purple man sailed the small green boat'.split()  # adjectives are borked
+# example = 'a large purple man sailed the small green boat to Mary'.split()     # TODO no code to handle prepositions, "to" is a preposition in this sentence
+example = 'Mary gave me a picture'.split()  # NP V NP NP
+example = 'Mary gave Zoe a purple picture'.split()  # NP V NP NP
+example = 'Mary gave the green boat a purple picture'.split()  # NP V NP NP   
 
 pprint.pprint(ATN(example))
 
