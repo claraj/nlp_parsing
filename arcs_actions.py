@@ -113,9 +113,12 @@ def NP_1(words, position=0):
 
     # return the listy container AND the NUM and the noun and the position we are at 
 
-    out = [ 'NP', ]
+        out = [ 'NP', ]
 
-    for index, word in enumerate(words):   # not sure the loop is necessary here
+    # for index in range(position, len(words)):
+    # for index, word in enumerate(words):   # not sure the loop is necessary here
+
+        word = words[position]
 
         lexicon_entry = lexicon[word]
         features = lexicon_entry.get('features')
@@ -136,29 +139,31 @@ def NP_1(words, position=0):
                 out.append(article)
                 from_np_2, position = NP_2(words, NUM, position + 1)
                 out.append(from_np_2)
-                return out, index + position + 1, NUM
+                # return out, index + position + 1, NUM
             case 'pronoun':
                 pronoun = [ ('PRONOUN', word), ('NUM', lexicon_entry['features']['NUM'] ) ]
                 out.append(pronoun)
-                return out, index + position + 1, NUM
+                # return out, index + position + 1, NUM
             case 'noun':
                 # TEST NUM(*) = 3p
                 if NUM == {'3s'}:
                     noun = [ ('NOUN', word), ('NUM', '3s' ) ]
                     out.append(noun)
-                    return out,  index + position + 1
+                    # return out,  index + position + 1
                 elif NUM == {'3p'}:
                     noun = [ ('NOUN', word), ('NUM', '3p' ) ]
                     out.append(noun)
-                    return out,  index + position + 1, NUM
+                    # return out,  index + position + 1, NUM
                 else:
                     raise Exception(f'Noun does not make sense. {word} {lexicon_entry} \n{words}')
             case 'name':
                 name = [ ('NAME', word), ('NUM', '3s') ]
                 out.append(name)
-                return out, index + position + 1, NUM
+                # return out, index + position + 1, NUM
             case _:   # the default case, nothing else matches
                 raise Exception(f'Unexpected word type {word} {lexicon_entry} \n{words}')
+
+        return out, position + 1, NUM
 
 
 # Handles adjectives, "big" and "purple" in "the big purple cat"
