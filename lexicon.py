@@ -146,6 +146,16 @@ lexicon = {
         
     },
 
+    'pictures': { 
+        'type': 'noun',
+        'features': 
+            {
+                 'NOUN' : {'picture'},
+                 'NUM':  {'3p'}
+            },
+        
+    },
+
     'man': { 
         'type': 'noun',
         'features': 
@@ -168,16 +178,10 @@ lexicon = {
 
     'boat': { 
         'type': 'noun',
-        'features': [ 
-            {
-                'feature': 'NOUN',
-                'values': {'boat'}
+        'features': {
+             'NOUN': {'boat'},
+             'NUM': {'3s',}
             },
-            {
-                'feature': 'NUM',
-                'values': {'3p',}
-            },
-        ] 
     },
 
     'of': { 
