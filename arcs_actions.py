@@ -46,6 +46,8 @@ def sets_intersect(num_1, num_2):
 
 def ATN(words):
 
+    print(words)
+
     for word in words:
         if not lexicon.get(word):
             raise Exception('Word {word} not in lexicon.')
@@ -85,19 +87,26 @@ def ATN(words):
         # go to S2 via NP 
         object_noun_parse, position, NUM = NP_1(words, position)
 
-        object_stuff = (  ('OBJ', object_noun_parse) )    # glob this in somewhere 
+        object_stuff = (  ('OBJ', object_noun_parse) )   
         parse.append(object_stuff)
         
     else:
         # jump to S3
         pass 
 
+
+    if position >= len(words):
+        return parse
+
+
     # from s3, where now? jump or via NP?
-    if 'transitive' not in verb_type:
+    if 'bitransitive' in verb_type:
         # IND-OBJ = OBJ
+        print('bitransitive')
         # OBJ = *
         indirect_object_noun_parse, position, NUM = NP_1(words, position)
-        # what about the ind-obj?
+        
+        parse.pop()  # remove the object? 
         object_stuff_again = ( ('IND-OBJ', indirect_object_noun_parse) , ( 'OBJ', object_noun_parse) ) 
         parse.append(object_stuff_again)   # don't want to re-add the object? 
 
@@ -204,7 +213,9 @@ example = 'a purple purple picture'.split()   # yup
 # example = 'pictures'.split()  #ok
 
 example = 'a purple picture walked'.split()  # yup
-example = 'a purple man walked the small green boat'.split()  # nope
+example = 'a large purple man sailed the small green boat'.split()  # adjectives are borked
+example = 'a large purple man sailed the small green boat to Mary'.split()  # adjectives are borked
+
 
 pprint.pprint(ATN(example))
 

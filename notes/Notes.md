@@ -1,3 +1,12 @@
+STATE
+
+Parsing is happening
+
+* too many adjectives 
+* indirect objects not being added 
+* parse is not displayed very neatly 
+
+
 Lectures 
 * March 25th, 25:30 -> End 
 

@@ -1,12 +1,10 @@
 lexicon = {
     'what': { 
         'type': 'wh-pronoun',
-        'features': [ 
-            {
+        'features': {
                 'feature': 'NUM',
                 'values': {'3s', '3p'}
             }
-        ] 
     },
 
    'Mary': { 
@@ -23,6 +21,10 @@ lexicon = {
     },
     
     'small': {
+        'type': 'adj'
+    },
+
+    'large': {
         'type': 'adj'
     },
 
@@ -50,7 +52,7 @@ lexicon = {
             # "I walk."
             # Or it may be transitive, "I walked a marathon"
             # What are the ATN rules for intransitive verbs? 
-            'TYPE': {'transitive', 'intransitive'},
+            'TYPE': {'transitive', 'intransitive', 'bitransitive'},
             'TENSE': {'present'},
             'NUM': {'3s'}
         }
@@ -61,63 +63,47 @@ lexicon = {
         'features':  {
             'VERB': {'walk'},
             'TENSE': {'past'},
-            'TYPE': {'transitive', 'intransitive'},
+            'TYPE': {'transitive', 'intransitive', 'bitransitive'},
+            'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'}
+        },
+    },
+
+    'sailed': { 
+        'type': 'verb',
+        'features':  {
+            'VERB': {'sail'},
+            'TENSE': {'past'},
+            'TYPE': {'transitive', 'bitransitive'},
             'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'}
         },
     },
 
     'give': { 
         'type': 'verb',
-        'features': [ 
-            {
-                'feature': 'VERB',
-                'values': {'give'}
-            },
-            {
-                'feature': 'TYPE',
-                'values': {'transitive', 'bitransitive'}
-            },
-            {
-                'feature': 'TENSE',
-                'values': {'infinitive', 'present'}
-            },
-            {
-                'feature': 'NUM',
-                'values': {'1s', '1p', '2s', '2p', '3p'}
-            },
-        ] 
+        'features': {
+            'VERB': {'give'},
+            'TYPE': {'transitive', 'bitransitive'},
+            'TENSE': {'infinitive', 'present'},
+            'NUM': {'1s', '1p', '2s', '2p', '3p'}
+        },
     },
 
     'gave': { 
         'type': 'verb',
-        'features': [ 
-            {
-                'feature': 'VERB',
-                'values': {'give'}
-            },
-            {
-                'feature': 'TYPE',
-                'values': {'transitive', 'bitransitive'}
-            },
-            {
-                'feature': 'TENSE',
-                'values': {'past'}
-            },
-            {
-                'feature': 'NUM',
-                'values': {'1s', '1p', '2s', '3s', '3p'}
-            },
-        ] 
+        'features': {
+            'VERB': {'give'},
+            'TYPE': {'transitive', 'bitransitive'},
+            'TENSE': {'past'},
+            'NUM': {'1s', '1p', '2s', '2p', '3p'}
+        },
     },
 
     'me': { 
         'type': 'pronoun',
-        'features': [ 
-            {
+        'features': {
                 'feature': 'NUM',
                 'values': {'1s'}
             }
-        ] 
     },
 
     'a': { 
@@ -136,7 +122,7 @@ lexicon = {
     },
 
     'her': { 
-        'type': 'article',
+        'type': 'pronoun',
         'features': 
             {
                  'ROOT': {'she'},
