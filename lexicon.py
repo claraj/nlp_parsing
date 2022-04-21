@@ -18,6 +18,16 @@ lexicon = {
         'type': 'adj'
     },
 
+    'green': {
+        'type': 'adj'
+    },
+    
+    'small': {
+        'type': 'adj'
+    },
+
+
+
 #     # todo "did" - is lexicon correct? 
 #  probably won't use here...?
 
@@ -25,6 +35,7 @@ lexicon = {
         'type': 'verb',
         'features': {
             'VERB': {'do'},
+            # bitransitive is another word for ditransitive 
             'TYPE': {'transitive', 'bitransitive'},
             'TENSE': {'past'},
             'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'} 
@@ -35,6 +46,11 @@ lexicon = {
         'type': 'verb',
         'features': {
             'VERB': {'walk'},
+            # walk may be intransitive, in that it does not take an object.
+            # "I walk."
+            # Or it may be transitive, "I walked a marathon"
+            # What are the ATN rules for intransitive verbs? 
+            'TYPE': {'transitive', 'intransitive'},
             'TENSE': {'present'},
             'NUM': {'3s'}
         }
@@ -42,20 +58,12 @@ lexicon = {
 
     'walked': { 
         'type': 'verb',
-        'features': [ 
-            {
-                'feature': 'VERB',
-                'values': {'walk'}
-            },
-            {
-                'feature': 'TENSE',
-                'values': {'past'}
-            },
-            {
-                'feature': 'NUM',
-                'values': {'1s', '1p', '2s', '2p', '3s', '3p'}
-            },
-        ] 
+        'features':  {
+            'VERB': {'walk'},
+            'TENSE': {'past'},
+            'TYPE': {'transitive', 'intransitive'},
+            'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'}
+        },
     },
 
     'give': { 

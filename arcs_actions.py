@@ -50,7 +50,7 @@ def ATN(words):
         if not lexicon.get(word):
             raise Exception('Word {word} not in lexicon.')
 
-    noun_parse, position = NP_1(words, 0)
+    noun_parse, position, NUM_NP = NP_1(words, 0)
 
     parse = [ ('MOOD', 'declarative'), ('SUBJ', noun_parse),  ]
 
@@ -73,14 +73,17 @@ def ATN(words):
 
     position += 1
 
+    if position >= len(words):
+        return parse
+
     # do we do NP stuff to S3 or jump to S3? 
-    # test is - is this verb transitive or not? 
+    # test - is this verb transitive or not? 
 
     verb_type = verb_lexicon_entry['features']['TYPE']  # eg. transitive, bitransitive
 
     if 'transitive' in verb_type:
         # go to S2 via NP 
-        object_noun_parse, position = NP_1(words, position)
+        object_noun_parse, position, NUM = NP_1(words, position)
 
         object_stuff = (  ('OBJ', object_noun_parse) )    # glob this in somewhere 
         parse.append(object_stuff)
@@ -90,10 +93,10 @@ def ATN(words):
         pass 
 
     # from s3, where now? jump or via NP?
-    if 'bitransitive' in verb_type:
+    if 'transitive' not in verb_type:
         # IND-OBJ = OBJ
         # OBJ = *
-        indirect_object_noun_parse, position = NP_1(words, position)
+        indirect_object_noun_parse, position, NUM = NP_1(words, position)
         # what about the ind-obj?
         object_stuff_again = ( ('IND-OBJ', indirect_object_noun_parse) , ( 'OBJ', object_noun_parse) ) 
         parse.append(object_stuff_again)   # don't want to re-add the object? 
@@ -112,12 +115,15 @@ def NP_1(words, position=0):
 
     out = [ 'NP', ]
 
-    for index, word in enumerate(words):
+    for index, word in enumerate(words):   # not sure the loop is necessary here
 
         lexicon_entry = lexicon[word]
         features = lexicon_entry.get('features')
         if features:
             NUM = features.get('NUM')
+        else:
+            NUM = {}
+
 
         match lexicon_entry['type']:
             # case 'adj':
@@ -130,11 +136,11 @@ def NP_1(words, position=0):
                 out.append(article)
                 from_np_2, position = NP_2(words, NUM, position + 1)
                 out.append(from_np_2)
-                return out, index + position + 1
+                return out, index + position + 1, NUM
             case 'pronoun':
                 pronoun = [ ('PRONOUN', word), ('NUM', lexicon_entry['features']['NUM'] ) ]
                 out.append(pronoun)
-                return out, index + position + 1
+                return out, index + position + 1, NUM
             case 'noun':
                 # TEST NUM(*) = 3p
                 if NUM == {'3s'}:
@@ -144,13 +150,13 @@ def NP_1(words, position=0):
                 elif NUM == {'3p'}:
                     noun = [ ('NOUN', word), ('NUM', '3p' ) ]
                     out.append(noun)
-                    return out,  index + position + 1
+                    return out,  index + position + 1, NUM
                 else:
                     raise Exception(f'Noun does not make sense. {word} {lexicon_entry} \n{words}')
             case 'name':
                 name = [ ('NAME', word), ('NUM', '3s') ]
                 out.append(name)
-                return out, index + position + 1
+                return out, index + position + 1, NUM
             case _:   # the default case, nothing else matches
                 raise Exception(f'Unexpected word type {word} {lexicon_entry} \n{words}')
 
@@ -192,7 +198,8 @@ example = 'a purple purple picture'.split()   # yup
 # example = 'boat'.split()  # ok
 # example = 'pictures'.split()  #ok
 
-# example = ''.split()
-# example = ''.split()
+example = 'a purple picture walked'.split()  # yup
+example = 'a purple man walked the small green boat'.split()  # nope
+
 pprint.pprint(ATN(example))
 
