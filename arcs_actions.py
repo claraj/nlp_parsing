@@ -1,28 +1,7 @@
-from turtle import pos
+import re
 from lexicon import lexicon
 
-""" arc NP/Name 
 
-Action - set NAME = * 
-NUM = 3s
-
-
-
-Operaing on the Noun Prase NP "we" 
-Pronouns are a sort of noun phrase. 
-"we read" "we" takes the place of a noun s "we" takes the place of  
-the thing, so "Me and Tilley read"
-
-
-
-
-Arc              Actions 
-NP / pronoun     PRONOUN = *
-                 NUM = 1p 
-"""
-
-
-## Noun phrase 
 
 """
 
@@ -33,15 +12,6 @@ np - verb - np - np <- we read a book to the dog ; the dog ate a bag of flour ; 
 """
 
 import pprint
-
-
-def sets_intersect(num_1, num_2):
-    # either a string, or a set of strings. 
-    if isinstance(num_1, str):
-        num_1 = set(num_1)
-    if isinstance(num_2, str):
-        num_2 = set(num_2)
-    return num_1.intersection(num_2)
 
 
 def ATN(words):
@@ -59,6 +29,17 @@ def ATN(words):
     if position >= len(words):
         return parse
 
+    verb_parse = V(words, position, NUM_NP)
+
+    parse.append(verb_parse)
+
+    return tuple(parse)
+
+
+def V(words, position, NUM_NP):
+
+    verb_parse = [] 
+
     verb = words[position]  # assuming one verb 
 
     # ensure passes test NUM(SUBJ) ⋂ NUM(*)
@@ -67,16 +48,16 @@ def ATN(words):
     num_intersect = sets_intersect(NUM_NP, num_verb)
 
     if num_intersect:  # non-empty set
-        verb_parse = ( ('VERB', verb), ('NUM', num_intersect ) ) 
+        part_verb_parse = ( ('VERB', verb), ('NUM', num_intersect ) ) 
     else:
         raise Exception(f'Verb does not make sense. {verb} {verb_lexicon_entry} \n{words}')
 
-    parse.append(verb_parse)
+    verb_parse.append(part_verb_parse)
 
     position += 1
 
     if position >= len(words):
-        return parse
+        return verb_parse
 
     # do we do NP stuff to S3 or jump to S3? 
     # test - is this verb transitive or not? 
@@ -88,16 +69,14 @@ def ATN(words):
         object_noun_parse, position, NUM = NP_1(words, position)
 
         object_stuff = (  ('OBJ', object_noun_parse) )   
-        parse.append(object_stuff)
+        verb_parse.append(object_stuff)
         
     else:
         # jump to S3
         pass 
 
-
     if position >= len(words):
-        return parse
-
+        return verb_parse
 
     # from s3, where now? jump or via NP?
     if 'bitransitive' in verb_type:
@@ -106,15 +85,41 @@ def ATN(words):
         # OBJ = *
         indirect_object_noun_parse, position, NUM = NP_1(words, position)
         
-        parse.pop()  # remove the object? 
+        verb_parse.pop()  # remove the object? 
         object_stuff_again = ( ( 'OBJ', object_noun_parse) , ('IND-OBJ', indirect_object_noun_parse) ) 
-        parse.append(object_stuff_again)   # don't want to re-add the object? 
+        verb_parse.append(object_stuff_again)   # don't want to re-add the object? 
 
     else:
         # jump, done 
         pass 
 
-    return tuple(parse)
+    return verb_parse
+    
+
+def PP(words, position):
+
+    # generate mods     
+    prep_parse = [  ('PREP', preposition) ] 
+
+    preposition = words[position]
+
+    lexicon_entry = lexicon[preposition]
+
+    match lexicon_entry['type']:
+        case 'pp-noun':
+            prep_parse.append( ('PP', preposition) )
+            # and done 
+        case 'preposition':
+            prep_parse.append( ('PREP', preposition) )
+            # now deal with NP 
+
+            np_parse = NP_1(words, position=position + 1)
+            prep_parse.append(np_parse)
+
+    
+    return tuple(prep_parse)
+
+
 
 
 # the big noun phrase ATN. Deals with "we read", "the cat", "the big blue cat", "Zoe" etc. 
@@ -191,6 +196,16 @@ def NP_2(words, NUM, position, adj = []):
             raise Exception(f'Unexpected type. {word} {lexicon_entry} \n{words}')
 
 
+def sets_intersect(num_1, num_2):
+    # either a string, or a set of strings. 
+    if isinstance(num_1, str):
+        num_1 = set(num_1)
+    if isinstance(num_2, str):
+        num_2 = set(num_2)
+    return num_1.intersection(num_2)
+
+
+
 
 # example = 'a picture'.split()   # yup
 example = 'a purple purple picture'.split()   # yup
@@ -200,10 +215,15 @@ example = 'Mary walks'.split()  # ok
 
 # example = 'a purple picture walked'.split()  # yup
 # example = 'a large purple man sailed the small green boat'.split()  # adjectives are borked
-# example = 'a large purple man sailed the small green boat to Mary'.split()     # TODO no code to handle prepositions, "to" is a preposition in this sentence
 example = 'Mary gave me a picture'.split()  # NP V NP NP
 example = 'Mary gave Zoe a purple picture'.split()  # NP V NP NP
 example = 'Mary gave the large green boat a small purple picture'.split()  # NP V NP NP   
+# example = 'Zoe loves food'.split()   # NP V NP
+
+# example = 'a large purple man sailed the small green boat to Mary'.split()     # TODO no code to handle prepositions, "to" is a preposition in this sentence
+# example = 'a large purple man loudly sailed the small green boat to Mary'.split()     # TODO handle adverbs 
+
 
 pprint.pprint(ATN(example))
+
 

@@ -115,6 +115,27 @@ lexicon = {
         },
     },
 
+    'loves': {
+        'type': 'verb',
+        'features': {
+            'VERB': {'give'},
+            'TYPE': {'transitive'},    
+            'TENSE': {'present'},
+            'NUM': {'3s'}  
+        }
+    },
+
+    'coughs': { 
+        'type': 'verb',
+        'features': {
+            'VERB': {'cough'},
+            'TYPE': {'intransitive'},
+            'TENSE': {'present'},
+            'NUM': {'3s'}
+        },
+    },
+
+
     'me': { 
         'type': 'pronoun',
         'features': {
@@ -157,18 +178,25 @@ lexicon = {
     'pictures': { 
         'type': 'noun',
         'features': {
-                 'NOUN' : {'picture'},
-                 'NUM':  {'3p'}
-            },
-        
+            'NOUN' : {'picture'},
+            'NUM':  {'3p'}
+        },
     },
 
     'man': { 
         'type': 'noun',
         'features': {
-                 'NOUN' : {'main'},
-                 'NUM':  {'3s'}
-            },
+            'NOUN' : {'main'},
+            'NUM':  {'3s'}
+        },
+        
+    },
+
+    'food': { 
+        'type': 'noun',
+        'features': {
+            'NUM':  {'3s'}
+        },
         
     },
     
@@ -194,6 +222,13 @@ lexicon = {
         'features': {
         }
     },
+
+    'yesterday': { 
+        'type': 'pp-noun',
+        'features': {
+        }
+    },
+
 
     
 
