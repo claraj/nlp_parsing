@@ -63,7 +63,8 @@ def ATN(words):
     parse = [ ('MOOD', 'declarative'), ('SUBJ', noun_parse), ]
 
     if position >= len(words):
-        return parse
+        sentence = ( 'S', tuple(parse) )
+        return sentence
 
     verb_parse = V(words, position, NUM_NP)
 
