@@ -1,0 +1,11 @@
+['Alice', 'gave', 'Bob', 'a', 'picture', 'of', 'the', 'boat']
+('S',
+ (('MOOD', 'declarative'),
+  ('SUBJ', ('NP', (('NAME', 'Alice'), ('NUM', '3s')))),
+  ('V',
+   (('VERB', 'gave'), ('NUM', {'3s'}), ('TENSE', {'past'})),
+   (('OBJ', ('NP', (('NAME', 'Bob'), ('NUM', '3s')))),
+    ('IND-OBJ',
+     ('NP',
+      (('DET', 'a'), ('NUM', {'3s'})),
+      (('NOUN', 'picture'), ('NUM', {'3s'}))))))))

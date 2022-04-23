@@ -28,6 +28,19 @@ lexicon = {
                 'NUM': {'3s'}
             }
     },
+   'Alice': { 
+        'type': 'name',
+            'features': {
+                'NUM': {'3s'}
+            }
+    },
+    
+   'Bob': { 
+        'type': 'name',
+            'features': {
+                'NUM': {'3s'}
+            }
+    },
 
     'purple': {
         'type': 'adj'
@@ -104,6 +117,7 @@ lexicon = {
             'NUM': {'1s', '1p', '2s', '2p', '3p'}  # no 3s
         },
     },
+
 
     'gave': { 
         'type': 'verb',

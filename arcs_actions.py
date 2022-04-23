@@ -24,7 +24,7 @@ def ATN(words):
 
     noun_parse, position, NUM_NP = NP_1(words, 0)
 
-    parse = [ ('MOOD', 'declarative'), ('SUBJ', noun_parse),  ]
+    parse = [ ('MOOD', 'declarative'), ('SUBJ', noun_parse), ]
 
     if position >= len(words):
         return parse
@@ -33,12 +33,13 @@ def ATN(words):
 
     parse.append(verb_parse)
 
-    return tuple(parse)
+    sentence = ( 'S', tuple(parse) )
+    return sentence
 
 
 def V(words, position, NUM_NP):
 
-    verb_parse = [] 
+    verb_parse = [ 'V', ] 
 
     verb = words[position]  # assuming one verb 
 
@@ -46,9 +47,10 @@ def V(words, position, NUM_NP):
     verb_lexicon_entry = lexicon[verb]
     num_verb = verb_lexicon_entry['features']['NUM']
     num_intersect = sets_intersect(NUM_NP, num_verb)
+    tense = verb_lexicon_entry['features']['TENSE']
 
     if num_intersect:  # non-empty set
-        part_verb_parse = ( ('VERB', verb), ('NUM', num_intersect ) ) 
+        part_verb_parse = ( ('VERB', verb), ('NUM', num_intersect ), ('TENSE', tense) ) 
     else:
         raise Exception(f'Verb does not make sense. {verb} {verb_lexicon_entry} \n{words}')
 
@@ -57,11 +59,10 @@ def V(words, position, NUM_NP):
     position += 1
 
     if position >= len(words):
-        return verb_parse
+        return tuple(verb_parse)
 
     # do we do NP stuff to S3 or jump to S3? 
     # test - is this verb transitive or not? 
-
     verb_type = verb_lexicon_entry['features']['TYPE']  # eg. transitive, bitransitive
 
     if 'transitive' in verb_type:
@@ -76,12 +77,13 @@ def V(words, position, NUM_NP):
         pass 
 
     if position >= len(words):
-        return verb_parse
+        return tuple(verb_parse)
+
+
 
     # from s3, where now? jump or via NP?
     if 'bitransitive' in verb_type:
         # IND-OBJ = OBJ
-        print('bitransitive')
         # OBJ = *
         indirect_object_noun_parse, position, NUM = NP_1(words, position)
         
@@ -93,15 +95,14 @@ def V(words, position, NUM_NP):
         # jump, done 
         pass 
 
-    return verb_parse
+    return tuple(verb_parse)
     
 
 def PP(words, position):
 
-    # generate mods     
-    prep_parse = [  ('PREP', preposition) ] 
-
     preposition = words[position]
+
+    prep_parse = [  ] 
 
     lexicon_entry = lexicon[preposition]
 
@@ -112,14 +113,11 @@ def PP(words, position):
         case 'preposition':
             prep_parse.append( ('PREP', preposition) )
             # now deal with NP 
-
             np_parse = NP_1(words, position=position + 1)
-            prep_parse.append(np_parse)
+            prep_parse.append( ('OBJ', np_parse) )
 
-    
-    return tuple(prep_parse)
-
-
+    prep_parse_with_modifiers = ('MODS', prep_parse)
+    return tuple(prep_parse_with_modifiers)
 
 
 # the big noun phrase ATN. Deals with "we read", "the cat", "the big blue cat", "Zoe" etc. 
@@ -140,7 +138,6 @@ def NP_1(words, position=0):
             NUM = features.get('NUM')
         else:
             NUM = set()
-
 
         match lexicon_entry['type']:
             case 'article':
@@ -164,6 +161,10 @@ def NP_1(words, position=0):
             case 'name':
                 name = ( ('NAME', word), ('NUM', '3s') )
                 out.append(name)
+            case 'preposition':
+                prep_parse = PP(words, position)  
+                out.append(prep_parse)              
+
             case _:   # the default case, nothing else matches
                 raise Exception(f'Unexpected word type {word} {lexicon_entry} \n{words}')
 
@@ -187,7 +188,10 @@ def NP_2(words, NUM, position, adj = []):
             # NUM(*)  must be in the set NUM
             num_intersect = sets_intersect(lexicon_entry['features']['NUM'], NUM)
             if num_intersect:
-                parse = ( ('NOUN', word ),  ('NUM', num_intersect ),  ( 'ADJ', adj) )
+                if adj:
+                    parse = ( ('NOUN', word ),  ('NUM', num_intersect ),  ( 'ADJ', adj) )
+                else:
+                    parse = ( ('NOUN', word ),  ('NUM', num_intersect ) )
                 return parse, position
             else:
                 raise Exception(f'Noun should match number {NUM}. {word} {lexicon_entry} \n{words}')
@@ -220,8 +224,11 @@ example = 'Mary gave Zoe a purple picture'.split()  # NP V NP NP
 example = 'Mary gave the large green boat a small purple picture'.split()  # NP V NP NP   
 # example = 'Zoe loves food'.split()   # NP V NP
 
-# example = 'a large purple man sailed the small green boat to Mary'.split()     # TODO no code to handle prepositions, "to" is a preposition in this sentence
-# example = 'a large purple man loudly sailed the small green boat to Mary'.split()     # TODO handle adverbs 
+example = 'a large purple man sailed the small green boat to Mary'.split()     # TODO no code to handle prepositions, "to" is a preposition in this sentence
+
+# this correctly fails because the the number does not match
+# example = 'Alice give Bob a picture of the boat'.split()    
+# example = 'Alice gave Bob a picture of the boat'.split()    
 
 
 pprint.pprint(ATN(example))
