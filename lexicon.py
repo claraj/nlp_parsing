@@ -1,11 +1,30 @@
 lexicon = {
 
+   'Mary': { 
+        'type': 'name',
+            'features': {
+                'NUM': {'3s'}
+            }
+    },
+
+    'purple': {
+        'type': 'adj'
+    },
+
+    'sailed': { 
+        'type': 'verb',
+        'features':  {
+            'VERB': {'sail'},
+            'TENSE': {'past'},
+            'TYPE': {'transitive', 'bitransitive'},
+            'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'}
+        },
+    },
 
     'to': { 
         'type': 'preposition',
         'features': {
-                # ??? TODO
-            }
+        }
     },
 
     'what': { 
@@ -15,12 +34,7 @@ lexicon = {
             }
     },
 
-   'Mary': { 
-        'type': 'name',
-            'features': {
-                'NUM': {'3s'}
-            }
-    },
+
 
    'Zoe': { 
         'type': 'name',
@@ -34,7 +48,7 @@ lexicon = {
                 'NUM': {'3s'}
             }
     },
-    
+
    'Bob': { 
         'type': 'name',
             'features': {
@@ -42,9 +56,6 @@ lexicon = {
             }
     },
 
-    'purple': {
-        'type': 'adj'
-    },
 
     'green': {
         'type': 'adj'
@@ -94,16 +105,6 @@ lexicon = {
             'VERB': {'walk'},
             'TENSE': {'past'},
             'TYPE': {'transitive', 'intransitive', 'bitransitive'},
-            'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'}
-        },
-    },
-
-    'sailed': { 
-        'type': 'verb',
-        'features':  {
-            'VERB': {'sail'},
-            'TENSE': {'past'},
-            'TYPE': {'transitive', 'bitransitive'},
             'NUM': {'1s', '1p', '2s', '2p', '3s', '3p'}
         },
     },

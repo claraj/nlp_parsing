@@ -154,7 +154,7 @@ Noun phrase and transitive verb with noun phrase object, with article and adject
      ('NP',
       ('MODS',
        [('PREP', 'to'),
-        ('OBJ', (('NP', (('NAME', 'Mary'), ('NUM', '3s'))), 11, '3s'))])))))))
+        ('OBJ', ('NP', (('NAME', 'Mary'), ('NUM', '3s'))))])))))))
 ```
 
 ## Alice gave Bob a picture of the boat

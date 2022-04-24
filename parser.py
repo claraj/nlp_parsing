@@ -15,23 +15,24 @@ np - verb - np - np <- we read a book to the dog ; the dog ate a bag of flour ; 
 from pprint import pprint
 
 example_sentences = [
-    'boat',  # ok
-    'pictures',  #ok
-    'a picture',
-    'a small purple picture',   # noun phrase with adjectives
-    'Mary sailed',  # NP, V
-    'Mary gave me a picture',  # NP V NP NP
-    'Mary gave Zoe a purple picture',  # NP V NP NP
-    'Mary gave the large green boat a small purple picture',  # NP V NP NP   
-    'a large purple man sailed the small green boat',  
-    'a large purple man sailed the small green boat to Mary',  # Prepositional phrase
+    # 'boat',  # ok
+    # 'pictures',  #ok
+    # 'a picture',
+    # 'a small purple picture',   # noun phrase with adjectives
+    # 'Mary sailed',  # NP, V
+    # 'Mary gave me a picture',  # NP V NP NP
+    # 'Mary gave Zoe a purple picture',  # NP V NP NP
+    # 'Mary gave the large green boat a small purple picture',  # NP V NP NP   
+    # 'a large purple man sailed the small green boat',  
+    # 'a large purple man sailed the small green boat to Mary',  # Prepositional phrase
     'Alice gave Bob a picture of the boat',    
 
-    # this correctly fails because the the number of verb and subject do not match
-    # 'Alice give Bob a picture of the boat',    
+
 ]
 
 
+    # this correctly fails because the the number of verb and subject do not match
+    # 'Alice give Bob a picture of the boat',    
 
 def main():
     sentence = input('Please enter a sentence:\n')
@@ -150,7 +151,7 @@ def PP(words, position):
         case 'preposition':
             prep_parse.append( ('PREP', preposition) )
             # now deal with NP 
-            np_parse = NP_1(words, position=position + 1)
+            np_parse, _, _ = NP_1(words, position=position + 1)
             prep_parse.append( ('OBJ', np_parse) )
 
     prep_parse_with_modifiers = ('MODS', prep_parse)
@@ -164,9 +165,8 @@ def NP_1(words, position=0):
 
         out = [ 'NP', ]
 
-    # for index in range(position, len(words)):
-    # for index, word in enumerate(words):   # not sure the loop is necessary here
-
+    # while position < len(words):
+    
         word = words[position]
 
         lexicon_entry = lexicon[word]
@@ -180,7 +180,7 @@ def NP_1(words, position=0):
 
         match lexicon_entry['type']:
             case 'article':
-                article = ( ('DET', word), ('NUM', NUM))
+                article = ( ('DET', word), ('NUM', NUM) )
                 # todo article -> adjective loop 
                 out.append(article)
                 from_np_2, position = NP_2(words, NUM, position + 1, adj=[])
